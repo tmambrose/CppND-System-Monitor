@@ -71,7 +71,22 @@ vector<int> LinuxParser::Pids() {
 float LinuxParser::MemoryUtilization() { return 0.0; }
 
 // TODO: Read and return the system uptime
-long LinuxParser::UpTime() { return 0; }
+long LinuxParser::UpTime() {
+  long user{0}, nice{0}, system{0}, idle{0}, IOwait{0}, IRQ{0};
+  long softIRQ{0}, steal{0}, guest{0}, guestNice{0};
+  long uptime{0};
+  string line;
+
+  std::ifstream stream(kProcDirectory + kStatFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    std::istringstream linestream(line);
+    linestream >> user >> nice >> system >> idle >> IOwait >> IRQ >> softIRQ >> steal >> guest >> guestNice;
+  }
+  uptime = user + nice + system + idle + IOwait + IRQ + softIRQ + softIRQ + steal + guest + guestNice;
+  
+  return uptime; 
+}
 
 // TODO: Read and return the number of jiffies for the system
 long LinuxParser::Jiffies() { return 0; }
