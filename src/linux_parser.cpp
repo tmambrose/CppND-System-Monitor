@@ -102,7 +102,21 @@ long LinuxParser::ActiveJiffies() { return 0; }
 long LinuxParser::IdleJiffies() { return 0; }
 
 // TODO: Read and return CPU utilization
-vector<string> LinuxParser::CpuUtilization() { return {}; }
+// Move UpTime process to collect CpuUtilization here...
+vector<string> LinuxParser::CpuUtilization() { 
+  vector<string> cpu_stats;
+  string line, item;
+
+  std::ifstream stream(kProcDirectory + kStatFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    std::istringstream linestream(line);
+    while (linestream >> item) {
+      cpu_stats.emplace_back(item);
+    }
+  }
+  return cpu_stats; 
+}
 
 // TODO: Read and return the total number of processes
 int LinuxParser::TotalProcesses() { return 0; }
