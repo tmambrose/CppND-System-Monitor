@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 #include "linux_parser.h"
 
@@ -71,26 +72,38 @@ vector<int> LinuxParser::Pids() {
 // TODO: Read and return the system memory utilization
 float LinuxParser::MemoryUtilization() {
   string line, key, value;
-  long memTotal{0}, memFree{0};
+  float memTotal{0.0}, memFree{0.0}, cached{0.0}, sReclaimable{0.0}, buffers{0.0};
 
   std::ifstream filestream(kProcDirectory + kMeminfoFilename);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
+      
+      std::remove(line.begin(), line.end(), ' ');
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
+
       while (linestream >> key >> value) {
         if (key == "MemTotal") {
-          memTotal = stoi(value);
+          memTotal = stof(value);
         }
         if (key == "MemFree") {
-          memFree = stoi(value);
-          break;  // once MemFree is found, break out of loop
+          memFree = stof(value);
+        }
+        if (key == "Buffers") {
+          buffers = stof(value);
+        }
+        if (key == "Cached") {
+          cached = stof(value);
+        }
+        if (key == "SReclaimable") {
+          sReclaimable = stof(value);
         }
       }
     }
   }
-  float memoryUtilization = (memTotal - memFree) / memTotal;
-  return memoryUtilization; 
+  float used = memTotal - memFree - cached - sReclaimable - buffers;
+  float memUtil = used / memTotal;
+  return memUtil;
 }
 
 // TODO: Read and return the system uptime
