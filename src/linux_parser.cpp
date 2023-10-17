@@ -108,13 +108,17 @@ float LinuxParser::MemoryUtilization() {
 
 // TODO: Read and return the system uptime
 long LinuxParser::UpTime() {
-  vector<string> cpu_stats = LinuxParser::CpuUtilization();
+  string line, key;
   long uptime{0};
+  std::ifstream stream(kProcDirectory + kUptimeFilename);
 
-  for (auto stat : cpu_stats) {
-    uptime += stoi(stat);
+  if (stream.is_open()) {
+    string line, key;
+    std::getline(stream, line);
+    std::istringstream linestream(line);
+    linestream >> key;
+    uptime = stoi(key);
   }
-
   return uptime; 
 }
 
@@ -142,6 +146,9 @@ vector<string> LinuxParser::CpuUtilization() {
     std::getline(stream, line);
     std::istringstream linestream(line);
     while (linestream >> item) {
+      if (item == "cpu") {
+        continue;
+      }
       cpu_stats.emplace_back(item);
     }
   }
