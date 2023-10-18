@@ -136,7 +136,6 @@ long LinuxParser::ActiveJiffies() { return 0; }
 long LinuxParser::IdleJiffies() { return 0; }
 
 // TODO: Read and return CPU utilization
-// Move UpTime process to collect CpuUtilization here...
 vector<string> LinuxParser::CpuUtilization() { 
   vector<string> cpu_stats;
   string line, item;
