@@ -3,10 +3,7 @@
 
 class Processor {
  public:
-  Processor(float user, float nice, float system, float idle, float iowait,
-    float irq, float softIrq, float steal, float guest, float guestNice) : 
-    user_{user}, nice_{nice}, system_{system}, idle_{idle}, iowait_{iowait},
-    irq_{irq}, softIrq_{softIrq}, steal_{steal}, guest_{guest}, guestNice_{guestNice} {};
+  Processor();
   float Utilization();  // TODO: See src/processor.cpp
 
   // Done: Declare any necessary private members
