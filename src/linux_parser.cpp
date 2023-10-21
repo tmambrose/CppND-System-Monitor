@@ -83,21 +83,11 @@ float LinuxParser::MemoryUtilization() {
       std::istringstream linestream(line);
 
       while (linestream >> key >> value) {
-        if (key == "MemTotal") {
-          memTotal = stof(value);
-        }
-        if (key == "MemFree") {
-          memFree = stof(value);
-        }
-        if (key == "Buffers") {
-          buffers = stof(value);
-        }
-        if (key == "Cached") {
-          cached = stof(value);
-        }
-        if (key == "SReclaimable") {
-          sReclaimable = stof(value);
-        }
+        if (key == "MemTotal") memTotal = stof(value);
+        if (key == "MemFree") memFree = stof(value);
+        if (key == "Buffers") buffers = stof(value);
+        if (key == "Cached") cached = stof(value);
+        if (key == "SReclaimable") sReclaimable = stof(value);
       }
     }
   }
