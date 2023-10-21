@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <iostream>
 
 #include "linux_parser.h"
 
@@ -12,6 +11,7 @@ using std::stof;
 using std::string;
 using std::to_string;
 using std::vector;
+using namespace LinuxParser;
 
 // DONE: An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
@@ -145,7 +145,7 @@ vector<string> LinuxParser::CpuUtilization() {
 }
 
 // TODO: Read and return the total number of processes
-int LinuxParser::TotalProcesses() { return 0; }
+int LinuxParser::TotalProcesses() { return LinuxParser::Pids().size(); }
 
 // TODO: Read and return the number of running processes
 int LinuxParser::RunningProcesses() { return 0; }
