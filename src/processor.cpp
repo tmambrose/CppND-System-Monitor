@@ -34,13 +34,9 @@ Processor::Processor() {
     ("cpuN" line) spent in various states.
 */
 float Processor::Utilization() {
-    Processor cpu = Processor();
-
-    float idle = cpu.idle_ + cpu.iowait_;
-    float nonIdle = cpu.user_ + cpu.nice_ + cpu.system_ + cpu.irq_ + cpu.softIrq_ + cpu.steal_;
+    float idle = idle_ + iowait_;
+    float nonIdle = user_ + nice_ + system_ + irq_ + softIrq_ + steal_;
     float total = idle + nonIdle;
-
     float utilization = (total - idle) / total;
-
     return utilization; 
 }
