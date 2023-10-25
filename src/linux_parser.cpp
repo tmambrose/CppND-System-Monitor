@@ -196,4 +196,31 @@ string LinuxParser::User(int pid) {
 
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid[[maybe_unused]]) { return 0; }
+// Uptime is in /proc/pid/stat #14 for utime
+// https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat/16736599#16736599
+long LinuxParser::UpTime(int pid) { 
+  vector<string> stats {};
+  string path = LinuxParser::kProcDirectory + std::to_string(pid) + LinuxParser::kStatFilename;
+  std::ifstream stream(path);
+  if (stream.is_open()) {
+    std::string line;
+    while (std::getline(stream, line)) {
+      std::istringstream linestream(line);
+      string value;
+      while (linestream >> value) {
+        stats.emplace_back(value);
+      }
+    }
+  }
+  unsigned short int utime_idx = 13;
+  unsigned short int stime_idx = 14;
+  unsigned short int cutime_idx = 15;
+  unsigned short int cstime_idx = 16;
+
+  long uptime = stoi(stats[utime_idx]) + stoi(stats[stime_idx]); // process uptime
+  uptime += (stoi(stats[cutime_idx]) + stoi(stats[cstime_idx])); // child process uptime
+  
+
+  
+  return uptime;// / sysconf(_SC_CLK_TCK);
+}
