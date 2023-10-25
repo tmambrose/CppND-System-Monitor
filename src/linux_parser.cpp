@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 #include "linux_parser.h"
 
@@ -158,39 +159,39 @@ string LinuxParser::Command(int pid[[maybe_unused]]) { return string(); }
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Ram(int pid[[maybe_unused]]) { return string(); }
 
-// TODO: Read and return the user ID associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
+// DONE: Read and return the user ID associated with a process
 string LinuxParser::Uid(int pid) {
-  string line, key, value, uid;
-  std::string path = kProcDirectory + std::to_string(pid) + kStatusFilename;
-  std::ifstream filestream(path);
+  string line, key, value;
+  std::ifstream filestream(kProcDirectory + std::to_string(pid) + kStatusFilename);
   if (filestream.is_open()) {
     while(std::getline(filestream, line)) {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
-      while (linestream >> key >> value) {
-        if (key == "UID") uid = value;
-      }
-    }
-  }
-  return uid; 
-}
-
-// TODO: Read and return the user associated with a process
-string LinuxParser::User(int pid) {
-  string line, key, delimiter, value;
-  string lPid = std::to_string(pid);
-  std::ifstream filestream(kPasswordPath);
-  if (filestream.is_open()) {
-    while(std::getline(filestream, line)) {
-      std::replace(line.begin(), line.end(), ':', ' ');
-      std::istringstream linestream(line);
-      while (linestream >> key >> delimiter >> value) {
-        if (value == lPid) break;
+      linestream >> key >> value;
+      if (key == "Uid") {
+        break;
       }
     }
   }
   return value; 
+}
+
+// DONE: Read and return the user associated with a process
+string LinuxParser::User(int pid) {
+  string uid = LinuxParser::Uid(pid);
+  string line, userName, xDelimiter, passwdUid; 
+  std::ifstream stream(LinuxParser::kPasswordPath);
+  if (stream.is_open()) {
+    while(std::getline(stream, line)) {
+      std::replace(line.begin(), line.end(), ':', ' ');
+      std::istringstream linestream(line);
+      linestream >> userName >> xDelimiter >> passwdUid;
+      if (uid == passwdUid) {
+        break;
+      }
+    }
+  }
+  return userName; 
 }
 
 // TODO: Read and return the uptime of a process
