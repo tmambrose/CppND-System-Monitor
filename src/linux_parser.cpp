@@ -195,8 +195,7 @@ string LinuxParser::User(int pid) {
 }
 
 // TODO: Read and return the uptime of a process
-// REMOVE: [[maybe_unused]] once you define the function
-// Uptime is in /proc/pid/stat #14 for utime
+// Uptime is in /proc/pid/stat
 // https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat/16736599#16736599
 long LinuxParser::UpTime(int pid) { 
   vector<string> stats {};
@@ -212,15 +211,13 @@ long LinuxParser::UpTime(int pid) {
       }
     }
   }
-  unsigned short int utime_idx = 13;
-  unsigned short int stime_idx = 14;
-  unsigned short int cutime_idx = 15;
-  unsigned short int cstime_idx = 16;
+  const unsigned short int UTIME_IDX = 13;  // #14 utime
+  const unsigned short int STIME_IDX = 14;  // #15 stime
+  const unsigned short int CUTIME_IDX = 15;  // #16 cutime
+  const unsigned short int CSTIME_IDX = 16;  // #17 cstime
 
-  long uptime = stoi(stats[utime_idx]) + stoi(stats[stime_idx]); // process uptime
-  uptime += (stoi(stats[cutime_idx]) + stoi(stats[cstime_idx])); // child process uptime
-  
+  long uptime = stoi(stats[UTIME_IDX]) + stoi(stats[STIME_IDX]); // process uptime
+  uptime += (stoi(stats[CUTIME_IDX]) + stoi(stats[CSTIME_IDX])); // child process uptime
 
-  
-  return uptime;// / sysconf(_SC_CLK_TCK);
+  return uptime;
 }
