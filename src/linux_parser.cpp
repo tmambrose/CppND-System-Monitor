@@ -127,12 +127,12 @@ long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
 // DONE: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { 
   vector<LinuxParser::CPUStates> states = {
-    LinuxParser::kUser_,
-    LinuxParser::kNice_,
-    LinuxParser::kSystem_,
-    LinuxParser::kIRQ_,
-    LinuxParser::kSoftIRQ_,
-    LinuxParser::kSteal_,
+    LinuxParser::kUser_,    // Time (Hz) spent in user mode.
+    LinuxParser::kNice_,    // Time (Hz) spent in user mode with low priority (nice).
+    LinuxParser::kSystem_,  // Time (Hz) spent in system mode.
+    LinuxParser::kIRQ_,     // Time (Hz) servicing interrupts (since Linux 2.6.0).
+    LinuxParser::kSoftIRQ_, // Time (Hz) servicing softirqs (since Linux 2.6.0).
+    LinuxParser::kSteal_,   // Stolen time (Hz), which is the time spent in other operating systems when running in a virtualized environment (since Linux 2.6.11).
   };
   vector<string> cpu = LinuxParser::CpuUtilization();
   unsigned long int jiffies {0};
@@ -145,8 +145,8 @@ long LinuxParser::ActiveJiffies() {
 // DONE: Read and return the number of idle jiffies for the system
 long LinuxParser::IdleJiffies() {
   vector<LinuxParser::CPUStates> states = {
-    LinuxParser::kIdle_,
-    LinuxParser::kIOwait_,
+    LinuxParser::kIdle_,    // Time (Hz) spent in the idle task.
+    LinuxParser::kIOwait_,  // iowait (Hz) (since Linux 2.5.41); Time waiting for I/O to complete (unreliable, see man pages).
   };
   vector<string> cpu = LinuxParser::CpuUtilization();
   unsigned long int jiffies {0};
