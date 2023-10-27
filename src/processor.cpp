@@ -10,20 +10,8 @@
     ("cpuN" line) spent in various states.
 */
 float Processor::Utilization() {
-    cpu_stats_ = LinuxParser::CpuUtilization();
-    user_ = stof(cpu_stats_[LinuxParser::kUser_]);
-    nice_ = stof(cpu_stats_[LinuxParser::kNice_]);
-    system_ = stof(cpu_stats_[LinuxParser::kSystem_]);
-    idle_ = stof(cpu_stats_[LinuxParser::kIdle_]);
-    iowait_ = stof(cpu_stats_[LinuxParser::kIOwait_]);
-    irq_ = stof(cpu_stats_[LinuxParser::kIRQ_]);
-    softIrq_ = stof(cpu_stats_[LinuxParser::kSoftIRQ_]);
-    steal_ = stof(cpu_stats_[LinuxParser::kSteal_]);
-    guest_ = stof(cpu_stats_[LinuxParser::kGuest_]);
-    guestNice_ = stof(cpu_stats_[LinuxParser::kGuestNice_]);
-    float idle = idle_ + iowait_;
-    float nonIdle = user_ + nice_ + system_ + irq_ + softIrq_ + steal_;
-    float total = idle + nonIdle;
-    float utilization = (total - idle) / total;
+    float activeJiffies = static_cast<float>(LinuxParser::ActiveJiffies());
+    float totalJiffies = static_cast<float>(LinuxParser::Jiffies());
+    float utilization = activeJiffies / totalJiffies;
     return utilization; 
 }
