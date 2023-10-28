@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <iostream>
 
 #include "linux_parser.h"
 
@@ -16,9 +15,7 @@ using namespace LinuxParser;
 
 // DONE: An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
-  string line;
-  string key;
-  string value;
+  string line, key, value;
   std::ifstream filestream(kOSPath);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
@@ -74,15 +71,12 @@ vector<int> LinuxParser::Pids() {
 float LinuxParser::MemoryUtilization() {
   string line, key, value;
   float memTotal{0.0}, memFree{0.0}, cached{0.0}, sReclaimable{0.0}, buffers{0.0};
-
   std::ifstream filestream(kProcDirectory + kMeminfoFilename);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
-      
       std::remove(line.begin(), line.end(), ' ');
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
-
       while (linestream >> key >> value) {
         if (key == "MemTotal") memTotal = stof(value);
         if (key == "MemFree") memFree = stof(value);
@@ -100,17 +94,13 @@ float LinuxParser::MemoryUtilization() {
 // DONE: Read and return the system uptime
 long LinuxParser::UpTime() {
   string line, key;
-  long uptime{0};
   std::ifstream stream(kProcDirectory + kUptimeFilename);
-
   if (stream.is_open()) {
-    string line, key;
     std::getline(stream, line);
     std::istringstream linestream(line);
     linestream >> key;
-    uptime = stoi(key);
   }
-  return uptime; 
+  return stoi(key); 
 }
 
 // DONE: Read and return the number of jiffies for the system
@@ -160,7 +150,6 @@ long LinuxParser::IdleJiffies() {
 vector<string> LinuxParser::CpuUtilization() { 
   vector<string> cpu_stats;
   string line, item;
-
   std::ifstream stream(kProcDirectory + kStatFilename);
   if (stream.is_open()) {
     std::getline(stream, line);
@@ -175,7 +164,7 @@ vector<string> LinuxParser::CpuUtilization() {
   return cpu_stats; 
 }
 
-// TODO: Read and return the total number of processes
+// DONE: Read and return the total number of processes
 int LinuxParser::TotalProcesses() { return LinuxParser::Pids().size(); }
 
 // TODO: Read and return the number of running processes
