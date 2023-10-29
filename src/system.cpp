@@ -24,7 +24,8 @@ System::System() {
   std::vector<int> pids = LinuxParser::Pids();
   for (auto pid : pids) {
     string user = LinuxParser::User(pid);
-    processes_.emplace_back(Process{pid, user});
+    string command = LinuxParser::Command(pid);
+    processes_.emplace_back(Process{pid, user, command});
   }
 }
 
