@@ -269,7 +269,6 @@ string LinuxParser::User(int pid) {
 }
 
 // DONE: Read and return the uptime of a process
-// https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat/16736599#16736599
 long LinuxParser::UpTime(int pid) { 
   vector<string> stats {};
   string path = LinuxParser::kProcDirectory + std::to_string(pid) + LinuxParser::kStatFilename;
@@ -284,7 +283,7 @@ long LinuxParser::UpTime(int pid) {
       }
     }
   }
-  const unsigned short int STARTTIME_IDX = 21; // #22 start time
+  const unsigned short int STARTTIME_IDX = 21;
   long starttime = stoi(stats[STARTTIME_IDX]);
   long uptime = LinuxParser::UpTime() - ( starttime / sysconf(_SC_CLK_TCK) );
   return uptime;
