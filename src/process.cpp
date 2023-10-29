@@ -16,8 +16,12 @@ Process::Process(int pid) : pid_ {pid} {}
 // DONE: Return this process's ID
 int Process::Pid() { return pid_; }
 
-// TODO: Return this process's CPU utilization
-float Process::CpuUtilization() { return 0; }
+// DONE: Return this process's CPU utilization
+float Process::CpuUtilization() { 
+    float activeJiffies = (float)(LinuxParser::ActiveJiffies(pid_) / sysconf(_SC_CLK_TCK));
+    float upTimeSeconds = (float)(LinuxParser::UpTime(pid_));
+    return activeJiffies / upTimeSeconds; 
+}
 
 // TODO: Return the command that generated this process
 string Process::Command() { return LinuxParser::Command(pid_); }
