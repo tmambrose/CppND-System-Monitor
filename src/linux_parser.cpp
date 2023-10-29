@@ -186,7 +186,7 @@ int LinuxParser::RunningProcesses() {
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Command(int pid[[maybe_unused]]) { return string(); }
 
-// TODO: Read and return the memory used by a process
+// TODO: Round to two decimal places
 string LinuxParser::Ram(int pid) { 
   string path = kProcDirectory + std::to_string(pid) + kStatusFilename;
   string line, key, value;
@@ -200,6 +200,7 @@ string LinuxParser::Ram(int pid) {
       break;
     }
   }
+  value = std::to_string( std::stof(value) / 1024 );
   return value; 
 }
 
