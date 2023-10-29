@@ -132,7 +132,7 @@ long LinuxParser::ActiveJiffies(int pid) {
     std::stoi(stats[STIME_IDX]) + 
     std::stoi(stats[CSTIME_IDX]) + 
     std::stoi(stats[CUTIME_IDX]);
-    
+
   return jiffies;
 }
 
@@ -204,13 +204,14 @@ int LinuxParser::RunningProcesses() {
   return std::stoi(value); 
 }
 
-// TODO: Test for is_open
 // DONE: Read and return the command associated with a process
 string LinuxParser::Command(int pid) { 
   string path = kProcDirectory + std::to_string(pid) + kCmdlineFilename;
   string line;
   std::ifstream stream(path);
-  std::getline(stream, line);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+  }
   return line; 
 }
 
