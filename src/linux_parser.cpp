@@ -182,9 +182,14 @@ int LinuxParser::RunningProcesses() {
   return std::stoi(value); 
 }
 
-// TODO: Read and return the command associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Command(int pid[[maybe_unused]]) { return string(); }
+// DONE: Read and return the command associated with a process
+string LinuxParser::Command(int pid) { 
+  string path = kProcDirectory + std::to_string(pid) + kCmdlineFilename;
+  string line;
+  std::ifstream stream(path);
+  std::getline(stream, line);
+  return line; 
+}
 
 // TODO: Round to two decimal places
 string LinuxParser::Ram(int pid) { 
