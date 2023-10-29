@@ -123,14 +123,16 @@ long LinuxParser::ActiveJiffies(int pid) {
       stats.emplace_back(value);
     }
   }
-  const unsigned short int UTIME {13};
-  const unsigned short int STIME {14};
-  const unsigned short int CSTIME {15};
-  const unsigned short int CUTIME {16};
-  unsigned long int jiffies = std::stoi(stats[UTIME]);
-  jiffies += std::stoi(stats[STIME]);
-  jiffies += std::stoi(stats[CSTIME]);
-  jiffies += std::stoi(stats[CUTIME]);
+  const unsigned short int UTIME_IDX {13};
+  const unsigned short int STIME_IDX {14};
+  const unsigned short int CSTIME_IDX {15};
+  const unsigned short int CUTIME_IDX {16};
+
+  unsigned long int jiffies = std::stoi(stats[UTIME_IDX]) + 
+    std::stoi(stats[STIME_IDX]) + 
+    std::stoi(stats[CSTIME_IDX]) + 
+    std::stoi(stats[CUTIME_IDX]);
+    
   return jiffies;
 }
 
