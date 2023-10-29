@@ -110,9 +110,29 @@ long LinuxParser::Jiffies() {
   return activeJiffies + idleJiffies;
 }
 
-// TODO: Read and return the number of active jiffies for a PID
-// REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
+// DONE: Read and return the number of active jiffies for a PID
+long LinuxParser::ActiveJiffies(int pid) {
+  string path = kProcDirectory + std::to_string(pid) + kStatFilename;
+  string line, value;
+  vector<string> stats {};
+  std::ifstream stream(path);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    std::istringstream linestream(line);
+    while (linestream >> value) {
+      stats.emplace_back(value);
+    }
+  }
+  const unsigned short int UTIME {13};
+  const unsigned short int STIME {14};
+  const unsigned short int CSTIME {15};
+  const unsigned short int CUTIME {16};
+  unsigned long int jiffies = std::stoi(stats[UTIME]);
+  jiffies += std::stoi(stats[STIME]);
+  jiffies += std::stoi(stats[CSTIME]);
+  jiffies += std::stoi(stats[CUTIME]);
+  return jiffies;
+}
 
 // DONE: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { 
@@ -167,7 +187,7 @@ vector<string> LinuxParser::CpuUtilization() {
 // DONE: Read and return the total number of processes
 int LinuxParser::TotalProcesses() { return LinuxParser::Pids().size(); }
 
-// TODO: Read and return the number of running processes
+// DONE: Read and return the number of running processes
 int LinuxParser::RunningProcesses() { 
   string line, key, value;
   std::ifstream stream(kProcDirectory + kStatFilename);
@@ -182,6 +202,7 @@ int LinuxParser::RunningProcesses() {
   return std::stoi(value); 
 }
 
+// TODO: Test for is_open
 // DONE: Read and return the command associated with a process
 string LinuxParser::Command(int pid) { 
   string path = kProcDirectory + std::to_string(pid) + kCmdlineFilename;
