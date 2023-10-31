@@ -20,20 +20,20 @@ using std::vector;
     You need to properly format the uptime. Refer to the comments mentioned in format. 
     cpp for formatting the uptime.
 */
-System::System() {
-  std::vector<int> pids = LinuxParser::Pids();
-  for (auto pid : pids) {
-    string user = LinuxParser::User(pid);
-    string command = LinuxParser::Command(pid);
-    processes_.emplace_back(Process{pid, user, command});
-  }
-}
 
 // DONE: Return the system's CPU
 Processor& System::Cpu() { return cpu_; }
 
 // TODO: Return a container composed of the system's processes
-vector<Process>& System::Processes() { return processes_; }
+vector<Process>& System::Processes() {
+  std::vector<int> pids = LinuxParser::Pids();
+  for (auto pid : pids) {
+    string user = LinuxParser::User(pid);
+    string command = LinuxParser::Command(pid);
+    processes_.emplace_back(Process{pid, user, command});
+  }  
+  return processes_; 
+}
 
 // DONE: Return the system's kernel identifier (string)
 std::string System::Kernel() { return LinuxParser::Kernel(); }
