@@ -24,15 +24,16 @@ using std::vector;
 // DONE: Return the system's CPU
 Processor& System::Cpu() { return cpu_; }
 
-// TODO: Return a container composed of the system's processes
+// DONE: Return a container composed of the system's processes
+// TODO: Add a sort to the processes.
 vector<Process>& System::Processes() {
   std::vector<int> pids = LinuxParser::Pids();
   for (auto pid : pids) {
     string user = LinuxParser::User(pid);
     string command = LinuxParser::Command(pid);
     processes_.emplace_back(Process{pid, user, command});
-  }  
-  return processes_; 
+  }
+  return processes_;
 }
 
 // DONE: Return the system's kernel identifier (string)
@@ -44,7 +45,7 @@ float System::MemoryUtilization() { return LinuxParser::MemoryUtilization(); }
 // DONE: Return the operating system name
 std::string System::OperatingSystem() { return LinuxParser::OperatingSystem(); }
 
-// TODO: Return the number of processes actively running on the system
+// DONE: Return the number of processes actively running on the system
 int System::RunningProcesses() { return LinuxParser::RunningProcesses(); }
 
 // DONE: Return the total number of processes on the system
