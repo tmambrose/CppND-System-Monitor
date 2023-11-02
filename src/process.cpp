@@ -7,7 +7,6 @@
 #include "process.h"
 #include "linux_parser.h"
 
-using std::stof;
 using std::string;
 using std::to_string;
 using std::vector;
@@ -19,9 +18,8 @@ int Process::Pid() { return pid_; }
 
 // DONE: Return this process's CPU utilization
 float Process::CpuUtilization() { 
-    float activeJiffies = static_cast<float>(LinuxParser::ActiveJiffies(pid_) / sysconf(_SC_CLK_TCK));
-    float upTimeSeconds = static_cast<float>(LinuxParser::UpTime(pid_));
-    return activeJiffies / upTimeSeconds;
+    return (static_cast<float>(LinuxParser::ActiveJiffies(pid_) / sysconf(_SC_CLK_TCK))) / 
+        static_cast<float>(LinuxParser::UpTime(pid_));
 }
 
 // DONE: Return the command that generated this process
@@ -37,6 +35,5 @@ string Process::User() { return user_; }
 long int Process::UpTime() { return LinuxParser::UpTime(pid_); }
 
 // TODO: Overload the "less than" comparison operator for Process objects
-bool Process::operator<(Process const& a) const {
-    return true;
-}
+// REMOVE: [[maybe_unused]] once you define the function
+bool Process::operator<(Process const& a[[maybe_unused]]) const { return true; }
