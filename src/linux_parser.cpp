@@ -229,7 +229,7 @@ string LinuxParser::Ram(int pid) {
       break;
     }
   }
-  value = std::to_string( std::stof(value) / 1024 );
+  value = std::to_string( (long) std::stof(value) / 1024 );
   return value; 
 }
 
