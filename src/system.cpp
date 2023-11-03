@@ -25,14 +25,15 @@ using std::vector;
 Processor& System::Cpu() { return cpu_; }
 
 // DONE: Return a container composed of the system's processes
-// TODO: Add a sort to the processes.
 vector<Process>& System::Processes() {
   std::vector<int> pids = LinuxParser::Pids();
+  processes_.clear();
   for (auto pid : pids) {
     string user = LinuxParser::User(pid);
     string command = LinuxParser::Command(pid);
     processes_.emplace_back(Process{pid, user, command});
   }
+  std::sort(processes_.rbegin(), processes_.rend());
   return processes_;
 }
 

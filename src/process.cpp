@@ -17,7 +17,7 @@ Process::Process(int pid, string user, string command) : pid_ {pid}, user_ {user
 int Process::Pid() { return pid_; }
 
 // DONE: Return this process's CPU utilization
-float Process::CpuUtilization() { 
+float Process::CpuUtilization() const { 
     return (static_cast<float>(LinuxParser::ActiveJiffies(pid_) / sysconf(_SC_CLK_TCK))) / 
         static_cast<float>(LinuxParser::UpTime(pid_));
 }
@@ -35,5 +35,6 @@ string Process::User() { return user_; }
 long int Process::UpTime() { return LinuxParser::UpTime(pid_); }
 
 // TODO: Overload the "less than" comparison operator for Process objects
-// REMOVE: [[maybe_unused]] once you define the function
-// bool Process::operator<(Process const& a[[maybe_unused]]) const { return true; }
+bool Process::operator<(Process const& a) const {
+    return CpuUtilization() < a.CpuUtilization();
+}
