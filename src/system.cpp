@@ -19,6 +19,12 @@ using std::vector;
 
     You need to properly format the uptime. Refer to the comments mentioned in format. 
     cpp for formatting the uptime.
+
+    TODO:
+    Calculate CPU utilization using measurement interval.
+    Make the display interactive.
+    Restructure the program to use abstract classes (interfaces) and pure virtual functions.
+    Port the program to another operating system.
 */
 
 // DONE: Return the system's CPU
